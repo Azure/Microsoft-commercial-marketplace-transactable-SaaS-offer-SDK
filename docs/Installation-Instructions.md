@@ -1,12 +1,15 @@
  # Installation instructions
 
   - [Overview](#overview)
-  - [Deploy web applications and SQL Azure database using an ARM template](#deploy-web-applications-and-sql-azure-database-using-an-arm-template)
-  - [Deploy web applications and SQL Azure database using Powershell](#deploy-web-applications-and-sql-azure-database-using-powershell)
-  - [Clone the repository, create an Azure SQL Database single database and prepare](#clone-the-repository--create-an-azure-sql-database-single-database-and-prepare)
+  - [Deployment options](#deployment-options)
+    * [Deploy web applications and SQL Azure database using an ARM template](#deploy-web-applications-and-sql-azure-database-using-an-arm-template)
+    * [Deploy web applications and SQL Azure database using Powershell](#deploy-web-applications-and-sql-azure-database-using-powershell)
+    * [Manual deployment](#manual-deployment)
+      + [Clone the repository, create an Azure SQL Database single database and prepare](#clone-the-repository-create-an-azure-sql-database-single-database-and-prepare)
+      + [Create Web Apps on Azure and deploy the code](#create-web-apps-on-azure-and-deploy-the-code)
   - [Change configuration](#change-configuration)
-  - [Create Web Apps on Azure and deploy the code](#create-web-apps-on-azure-and-deploy-the-code)
-    + [Running the solution locally](#running-the-solution-locally)
+    * [(Optional but recommended) Setting and Loading above configuration values from KeyVault](#optional-but-recommended-setting-and-loading-above-configuration-values-from-keyvault)
+  - [Running the solution locally](#running-the-solution-locally)
   - [Landing page and webhook settings for the SaaS offer on Partner Center](#landing-page-and-webhook-settings-for-the-saas-offer-on-partner-center)
   - [Next steps](#next-steps)
     - [Configuring the Customer Provisioning web application](./Customer-Experience.md)
@@ -19,7 +22,20 @@ Learn more about what's included and how to-use the SDK [here.](https://github.c
 
 Please note: this SDK is community-supported. If you need help or have questions using this SDK, please create a GitHub issue. Do not contact the marketplace pubisher support alias directly regarding use of this SDK. Thank you.
 
-## Deploy web applications and SQL Azure database using an ARM template
+## Deployment options
+
+The sample has two web apps to demonstrate the activation of a subscription for a SaaS offer, and potential scenarios for managing subscriptions and users. 
+
+There are many ways to create Web App resources on [App Service](https://docs.microsoft.com/en-us/azure/app-service/) and deploy the code,
+- Using Azure portal
+- Using command line tools, [Azure CLI](https://docs.microsoft.com/en-us/azure/app-service/samples-cli), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/app-service/samples-powershell) and [Resource Manager (ARM) templates](https://docs.microsoft.com/en-us/azure/app-service/samples-resource-manager-templates)
+- [Using Visual Studio Code](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-nodejs#deploy-the-app-to-azure), the example on this link is showing a Node.js app, but the same principles apply for a .NET solution.
+- [Using Visual Studio](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-dotnet#publish-your-web-app), this example demonstrates how to create a new web app on the Azure App Service, and deploy the code to it. 
+- [Continuous deployment](https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment)
+
+Following are three different examples of deployment.
+
+### Deploy web applications and SQL Azure database using an ARM template
 
 - Log on to [Azure](https://portal.azure.com)
 - Search for **Custom Template** and select the option - **Deploy a custom template**
@@ -48,7 +64,7 @@ Please note: this SDK is community-supported. If you need help or have questions
 > - https://contoso-admin.azurewebsites.net/Home/Index
 > - https://contoso-admin.azurewebsites.net/Home/Index/
 
-## Deploy web applications and SQL Azure database using Powershell
+### Deploy web applications and SQL Azure database using Powershell
 
    1. Install [Powershell 7.0.2](https://github.com/PowerShell/PowerShell/releases)
    2. Clone the repository
@@ -99,8 +115,9 @@ Install-Module -Name Az -AllowClobber
             -Location "East US" 
             -PathToARMTemplate ".\deploy.json"
 ```
-## Clone the repository, create an Azure SQL Database single database and prepare
- Create a single database following the instructions on the SQL Database service [quickstart] (https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal) document.
+### Manual deployment
+#### Clone the repository create an Azure SQL Database single database and prepare
+ Create a single database following the instructions on the SQL Database service [quickstart](https://docs.microsoft.com/en-us/azure/sql-database/sql-database-single-database-get-started?tabs=azure-portal) document.
 
  - Run the script **AMP-DB-2.1.sql** to initialize the database using your favorite SQL management tool, such as [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver15), or [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15). The scripts are in [deployment/database](../deployment/Database) folder.
 
@@ -109,6 +126,19 @@ Install-Module -Name Az -AllowClobber
     ``` sql
       INSERT INTO KnownUsers (UserEmail, RoleId) VALUES ('user@contoso.com', 1)
     ```
+
+
+#### Create Web Apps on Azure and deploy the code
+
+ Give appropriate names to indicate the applications' roles, for example, **\<yourname\>provisioning**, and **\<yourname\>publisher**. Please remember that these names will be the dns prefix for the host names of your applications and will eventually be available as yournameprovisioning.azurewebsites.net and yournamepublisher.azurewebsites.net.
+1. **Customer provisioning sample web application**, create and deploy the provisioning sample web application project in folder [src/SaaS.SDK.CustomerProvisioning](../src/SaaS.SDK.CustomerProvisioning)
+1. **Publisher sample web application**, create and deploy the provisioning sample web application project in folder [src/SaaS.SDK.CustomerProvisioning](../src/SaaS.SDK.PublisherSolution)
+
+Deploying the debug release, and choosing "self-contained" deployment mode is useful for the initial deployments.
+
+![publisoptions](./images/VSPublish.png)
+
+**_Important_**, Add the redirect uri on the Azure AD app registration after deploying the publisher solution following the steps [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-configure-app-access-web-apis#add-redirect-uris-to-your-application). The value should be https://\<yourappname\>.azurewebsites.net/Home/Index
 
 ## Change configuration
 
@@ -166,28 +196,7 @@ After making all of the above changes, the **appSettings.json** would look like 
 ![Enable Managed Identity on App Service](./images/keyvault-add-appsetting.png)
 
 
-## Create Web Apps on Azure and deploy the code
-
-The sample has two web apps to demonstrate the activation of a subscription for a SaaS offer, and potential scenarios for managing subscriptions and users. 
-
-There are many ways to create Web App resources on [App Service](https://docs.microsoft.com/en-us/azure/app-service/) and deploy the code,
-- Using Azure portal
-- Using command line tools, [Azure CLI](https://docs.microsoft.com/en-us/azure/app-service/samples-cli), [Azure PowerShell](https://docs.microsoft.com/en-us/azure/app-service/samples-powershell) and [Resource Manager (ARM) templates](https://docs.microsoft.com/en-us/azure/app-service/samples-resource-manager-templates)
-- [Using Visual Studio Code](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-nodejs#deploy-the-app-to-azure), the example on this link is showing a Node.js app, but the same principles apply for a .NET solution.
-- [Using Visual Studio](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-dotnet#publish-your-web-app), this example demonstrates how to create a new web app on the Azure App Service, and deploy the code to it. 
-- [Continuous deployment](https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment)
-
-You can use any of the methods above to create the web apps and deploy the code, but for the rest of this document, let's assume the use of [Visual Studio method](https://docs.microsoft.com/en-us/azure/app-service/app-service-web-get-started-dotnet#publish-your-web-app) to deploy the following two apps. Give appropriate names to indicate the applications' roles, for example, **\<yourname\>provisioning**, and **\<yourname\>publisher**. Please remember that these names will be the dns prefix for the host names of your applications and will eventually be available as yournameprovisioning.azurewebsites.net and yournamepublisher.azurewebsites.net.
-1. **Customer provisioning sample web application**, create and deploy the provisioning sample web application project in folder [src/SaaS.SDK.CustomerProvisioning](../src/SaaS.SDK.CustomerProvisioning)
-1. **Publisher sample web application**, create and deploy the provisioning sample web application project in folder [src/SaaS.SDK.CustomerProvisioning](../src/SaaS.SDK.PublisherSolution)
-
-Deploying the debug release, and choosing "self-contained" deployment mode is useful for the initial deployments.
-
-![publisoptions](./images/VSPublish.png)
-
-**_Important_**, Add the redirect uri on the Azure AD app registration after deploying the publisher solution following the steps [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-configure-app-access-web-apis#add-redirect-uris-to-your-application). The value should be https://\<yourappname\>.azurewebsites.net/Home/Index
-
-### Running the solution locally   
+## Running the solution locally   
 
 Press **F5** in Visual Studio 2019 to run the application locally.
 
