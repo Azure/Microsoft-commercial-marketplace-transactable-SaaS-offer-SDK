@@ -141,7 +141,7 @@
             this.logger?.LogInformation("Get PlanById");
             var planDetails = this.GetPlanById(subscription.AmpplanId);
             this.logger?.LogInformation("Get User");
-            var userdeatils = this.GetUserById(subscription.UserId);
+            var userDetails = this.GetUserById(subscription.UserId);
 
             string planEventName = "Activate";
 
@@ -194,9 +194,9 @@
                     this.emailService.SendEmail(emailContent);
                 }
 
-                if (emailContent.CopyToCustomer && !string.IsNullOrEmpty(userdeatils.EmailAddress))
+                if (emailContent.CopyToCustomer && !string.IsNullOrEmpty(userDetails.EmailAddress))
                 {
-                    emailContent.ToEmails = userdeatils.EmailAddress;
+                    emailContent.ToEmails = userDetails.EmailAddress;
 
                     if (!string.IsNullOrWhiteSpace(emailContent.ToEmails) || !string.IsNullOrWhiteSpace(emailContent.BCCEmails))
                     {

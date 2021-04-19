@@ -136,9 +136,9 @@
         /// </summary>
         /// <param name="partnerEmailAddress">The partner email address.</param>
         /// <param name="subscriptionId">The subscription identifier.</param>
-        /// <param name="isIncludeDeactvated">if set to <c>true</c> [is include deactvated].</param>
+        /// <param name="isIncludeDeactivated">if set to <c>true</c> [is include deactvated].</param>
         /// <returns> List of Subscriptions.</returns>
-        public IEnumerable<Subscriptions> GetSubscriptionsByEmailAddress(string partnerEmailAddress, Guid subscriptionId, bool isIncludeDeactvated = false)
+        public IEnumerable<Subscriptions> GetSubscriptionsByEmailAddress(string partnerEmailAddress, Guid subscriptionId, bool isIncludeDeactivated = false)
         {
             if (subscriptionId != default)
             {
@@ -154,9 +154,9 @@
         /// Gets the subscriptions by ScheduleId.
         /// </summary>
         /// <param name="subscriptionId">The subscription identifier.</param>
-        /// <param name="isIncludeDeactvated">if set to <c>true</c> [is include deactvated].</param>
+        /// <param name="isIncludeDeactivated">if set to <c>true</c> [is include deactvated].</param>
         /// <returns> Subscriptions.</returns>
-        public Subscriptions GetById(Guid subscriptionId, bool isIncludeDeactvated = false)
+        public Subscriptions GetById(Guid subscriptionId, bool isIncludeDeactivated = false)
         {
             if (subscriptionId != default)
             {
@@ -191,11 +191,11 @@
         /// <param name="subscriptionParametersOutput">The subscription parameters output.</param>
         public void AddSubscriptionParameters(SubscriptionParametersOutput subscriptionParametersOutput)
         {
-            var existingSubscriptionparameter = this.context.SubscriptionAttributeValues.Where(s => s.Id == subscriptionParametersOutput.Id).FirstOrDefault();
-            if (existingSubscriptionparameter != null)
+            var existingSubscriptionParameter = this.context.SubscriptionAttributeValues.Where(s => s.Id == subscriptionParametersOutput.Id).FirstOrDefault();
+            if (existingSubscriptionParameter != null)
             {
-                existingSubscriptionparameter.OfferId = subscriptionParametersOutput.OfferId;
-                this.context.SubscriptionAttributeValues.Update(existingSubscriptionparameter);
+                existingSubscriptionParameter.OfferId = subscriptionParametersOutput.OfferId;
+                this.context.SubscriptionAttributeValues.Update(existingSubscriptionParameter);
                 this.context.SaveChanges();
             }
             else

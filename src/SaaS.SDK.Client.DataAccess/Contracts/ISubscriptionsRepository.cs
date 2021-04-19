@@ -17,17 +17,17 @@
         /// </summary>
         /// <param name="partnerEmailAddress">The partner email address.</param>
         /// <param name="subscriptionId">The subscription identifier.</param>
-        /// <param name="isIncludeDeactvated">if set to <c>true</c> [is include deactvated].</param>
+        /// <param name="isIncludeDeactivated">if set to <c>true</c> [is include deactivated].</param>
         /// <returns> Subscriptions.</returns>
-        IEnumerable<Subscriptions> GetSubscriptionsByEmailAddress(string partnerEmailAddress, Guid subscriptionId, bool isIncludeDeactvated = false);
+        IEnumerable<Subscriptions> GetSubscriptionsByEmailAddress(string partnerEmailAddress, Guid subscriptionId, bool isIncludeDeactivated = false);
 
         /// <summary>
         /// Gets the subscriptions by schedule identifier.
         /// </summary>
         /// <param name="subscriptionId">The subscription identifier.</param>
-        /// <param name="isIncludeDeactvated">if set to <c>true</c> [is include deactvated].</param>
+        /// <param name="isIncludeDeactivated">if set to <c>true</c> [is include deactivated].</param>
         /// <returns> Subscriptions.</returns>
-        Subscriptions GetById(Guid subscriptionId, bool isIncludeDeactvated = false);
+        Subscriptions GetById(Guid subscriptionId, bool isIncludeDeactivated = false);
 
         /// <summary>
         /// Updates the status for subscription.

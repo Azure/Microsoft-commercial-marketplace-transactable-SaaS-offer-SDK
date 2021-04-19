@@ -46,25 +46,25 @@ namespace Microsoft.Marketplace.SaasKit.Network
             var httpResponse = ex.Response;
             if (httpResponse != null)
             {
-                var webresponse = httpResponse as System.Net.HttpWebResponse;
-                if (webresponse != null)
+                var webResponse = httpResponse as System.Net.HttpWebResponse;
+                if (webResponse != null)
                 {
                     this.logger?.Info("Error :: " + new StreamReader(ex.Response.GetResponseStream()).ReadToEnd());
-                    if (webresponse.StatusCode == HttpStatusCode.Unauthorized || webresponse.StatusCode == HttpStatusCode.Forbidden)
+                    if (webResponse.StatusCode == HttpStatusCode.Unauthorized || webResponse.StatusCode == HttpStatusCode.Forbidden)
                     {
                         throw new FulfillmentException("Token expired. Please logout and login again.", SaasApiErrorCode.Unauthorized);
                     }
-                    else if (webresponse.StatusCode == HttpStatusCode.NotFound)
+                    else if (webResponse.StatusCode == HttpStatusCode.NotFound)
                     {
                         this.logger?.Warn("Returning the error as " + JsonSerializer.Serialize(new { Error = "Not Found" }));
                         throw new FulfillmentException(string.Format("Unable to find the request {0}", url), SaasApiErrorCode.NotFound);
                     }
-                    else if (webresponse.StatusCode == HttpStatusCode.Conflict)
+                    else if (webResponse.StatusCode == HttpStatusCode.Conflict)
                     {
                         this.logger?.Warn("Returning the error as " + JsonSerializer.Serialize(new { Error = "Conflict" }));
                         throw new FulfillmentException(string.Format("Conflict came for {0}", url), SaasApiErrorCode.Conflict);
                     }
-                    else if (webresponse.StatusCode == HttpStatusCode.BadRequest)
+                    else if (webResponse.StatusCode == HttpStatusCode.BadRequest)
                     {
                         this.logger?.Warn("Returning the error as " + JsonSerializer.Serialize(new { Error = "Bad Request" }));
                         throw new FulfillmentException(string.Format("Unable to process the request {0}, server responding as BadRequest. Please verify the post data. ", url), SaasApiErrorCode.BadRequest);

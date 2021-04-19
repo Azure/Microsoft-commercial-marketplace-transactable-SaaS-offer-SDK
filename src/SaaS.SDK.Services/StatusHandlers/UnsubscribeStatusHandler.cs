@@ -17,7 +17,7 @@
         /// <summary>
         /// The fulfillment apiclient.
         /// </summary>
-        private readonly IFulfillmentApiClient fulfillmentApiclient;
+        private readonly IFulfillmentApiClient fulfillmentApiClient;
 
         /// <summary>
         /// The subscription log repository.
@@ -48,7 +48,7 @@
                                             ILogger<UnsubscribeStatusHandler> logger)
             : base(subscriptionsRepository, plansRepository, usersRepository)
         {
-            this.fulfillmentApiclient = fulfillApiClient;
+            this.fulfillmentApiClient = fulfillApiClient;
             this.subscriptionLogRepository = subscriptionLogRepository;
             this.logger = logger;
         }
@@ -64,13 +64,13 @@
             this.logger?.LogInformation("Result subscription : {0}", JsonSerializer.Serialize(subscription.AmpplanId));
 
             this.logger?.LogInformation("Get User");
-            var userdeatils = this.GetUserById(subscription.UserId);
+            var userDetails = this.GetUserById(subscription.UserId);
             string status = subscription.SubscriptionStatus;
             if (subscription.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingUnsubscribe.ToString())
             {
                 try
                 {
-                    var subscriptionData = this.fulfillmentApiclient.DeleteSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
+                    var subscriptionData = this.fulfillmentApiClient.DeleteSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
 
                     this.subscriptionsRepository.UpdateStatusForSubscription(subscriptionID, SubscriptionStatusEnumExtension.Unsubscribed.ToString(), false);
 
@@ -80,7 +80,7 @@
                         SubscriptionId = subscription.Id,
                         NewValue = SubscriptionStatusEnumExtension.Unsubscribed.ToString(),
                         OldValue = status,
-                        CreateBy = userdeatils.UserId,
+                        CreateBy = userDetails.UserId,
                         CreateDate = DateTime.Now,
                     };
                     this.subscriptionLogRepository.Save(auditLog);
@@ -89,7 +89,7 @@
                 }
                 catch (Exception ex)
                 {
-                    string errorDescriptin = string.Format("Exception: {0} :: Innser Exception:{1}", ex.Message, ex.InnerException);
+                    string errorDescriptin = string.Format("Exception: {0} :: inner Exception:{1}", ex.Message, ex.InnerException);
                     this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, errorDescriptin, SubscriptionStatusEnumExtension.UnsubscribeFailed.ToString());
                     this.logger?.LogInformation(errorDescriptin);
 
@@ -101,7 +101,7 @@
                         SubscriptionId = subscription.Id,
                         NewValue = SubscriptionStatusEnumExtension.UnsubscribeFailed.ToString(),
                         OldValue = subscription.SubscriptionStatus,
-                        CreateBy = userdeatils.UserId,
+                        CreateBy = userDetails.UserId,
                         CreateDate = DateTime.Now,
                     };
                     this.subscriptionLogRepository.Save(auditLog);

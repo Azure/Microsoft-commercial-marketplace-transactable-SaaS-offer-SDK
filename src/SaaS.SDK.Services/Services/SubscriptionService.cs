@@ -105,10 +105,10 @@
 
             foreach (var subscription in allSubscriptionsForEmail)
             {
-                SubscriptionResultExtension subscritpionDetail = this.PrepareSubscriptionResponse(subscription);
-                if (subscritpionDetail != null && subscritpionDetail.SubscribeId > 0)
+                SubscriptionResultExtension subscriptionDetail = this.PrepareSubscriptionResponse(subscription);
+                if (subscriptionDetail != null && subscriptionDetail.SubscribeId > 0)
                 {
-                    allSubscriptions.Add(subscritpionDetail);
+                    allSubscriptions.Add(subscriptionDetail);
                 }
             }
 
@@ -126,10 +126,10 @@
             var subscriptionDetail = this.subscriptionRepository.GetById(subscriptionId, includeUnsubscribed);
             if (subscriptionDetail != null)
             {
-                SubscriptionResultExtension subscritpionDetail = this.PrepareSubscriptionResponse(subscriptionDetail);
-                if (subscritpionDetail != null)
+                SubscriptionResultExtension subscriptionResult = this.PrepareSubscriptionResponse(subscriptionDetail);
+                if (subscriptionResult != null)
                 {
-                    return subscritpionDetail;
+                    return subscriptionResult;
                 }
             }
 
@@ -144,7 +144,7 @@
         public SubscriptionResultExtension PrepareSubscriptionResponse(Subscriptions subscription)
         {
             var existingPlanDetail = this.planRepository.GetById(subscription.AmpplanId);
-            SubscriptionResultExtension subscritpionDetail = new SubscriptionResultExtension
+            SubscriptionResultExtension subscriptionDetail = new SubscriptionResultExtension
             {
                 Id = subscription.AmpsubscriptionId,
                 SubscribeId = subscription.Id,
@@ -157,11 +157,11 @@
                 CustomerName = subscription.User?.FullName,
                 IsMeteringSupported = existingPlanDetail != null ? (existingPlanDetail.IsmeteringSupported ?? false) : false,
             };
-            subscritpionDetail.Purchaser = new PurchaserResult();
+            subscriptionDetail.Purchaser = new PurchaserResult();
 
-            subscritpionDetail.Purchaser.EmailId = subscription.PurchaserEmail;
-            subscritpionDetail.Purchaser.TenantId = subscription.PurchaserTenantId ?? default;
-            return subscritpionDetail;
+            subscriptionDetail.Purchaser.EmailId = subscription.PurchaserEmail;
+            subscriptionDetail.Purchaser.TenantId = subscription.PurchaserTenantId ?? default;
+            return subscriptionDetail;
         }
 
         /// <summary>
@@ -178,10 +178,10 @@
 
             foreach (var subscription in allSubscriptionsForEmail)
             {
-                SubscriptionResult subscritpionDetail = this.PrepareSubscriptionResponse(subscription);
-                if (subscritpionDetail != null && subscritpionDetail.SubscribeId > 0)
+                SubscriptionResult subscriptionResult = this.PrepareSubscriptionResponse(subscription);
+                if (subscriptionResult != null && subscriptionResult.SubscribeId > 0)
                 {
-                    allSubscriptions.Add(subscritpionDetail);
+                    allSubscriptions.Add(subscriptionResult);
                 }
             }
 

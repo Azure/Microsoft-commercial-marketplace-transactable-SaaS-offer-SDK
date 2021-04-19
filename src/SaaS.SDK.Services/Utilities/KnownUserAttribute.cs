@@ -39,7 +39,7 @@
         /// <param name="context">The <see cref="T:Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext" />.</param>
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var isKnownuser = false;
+            var isKnownUser = false;
             string email = string.Empty;
 
             if (this.knownUsers != null && !string.IsNullOrWhiteSpace(this.knownUsers.KnownUsers))
@@ -50,9 +50,9 @@
             if (context.HttpContext != null && context.HttpContext.User.Claims.Count() > 0)
             {
                 email = context.HttpContext.User.Claims.Where(s => s.Type == ClaimConstants.CLAIM_EMAILADDRESS).FirstOrDefault().Value;
-                isKnownuser = this.knownUsersRepository.GetKnownUserDetail(email, 1)?.Id > 0;
+                isKnownUser = this.knownUsersRepository.GetKnownUserDetail(email, 1)?.Id > 0;
 
-                if (!isKnownuser)
+                if (!isKnownUser)
                 {
                     var routeValues = new RouteValueDictionary();
                     routeValues["controller"] = "Account";

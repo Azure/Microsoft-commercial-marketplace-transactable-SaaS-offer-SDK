@@ -63,14 +63,14 @@
             var subscription = this.GetSubscriptionById(subscriptionID);
             this.logger?.LogInformation("Result subscription : {0}", JsonSerializer.Serialize(subscription.AmpplanId));
             this.logger?.LogInformation("Get User");
-            var userdeatils = this.GetUserById(subscription.UserId);
+            var userDetails = this.GetUserById(subscription.UserId);
             string oldstatus = subscription.SubscriptionStatus;
 
             if (subscription.SubscriptionStatus == SubscriptionStatusEnumExtension.PendingActivation.ToString())
             {
                 try
                 {
-                    this.logger?.LogInformation("Get attributelsit");
+                    this.logger?.LogInformation("Get attributelist");
 
                     var subscriptionData = this.fulfillmentApiClient.ActivateSubscriptionAsync(subscriptionID, subscription.AmpplanId).ConfigureAwait(false).GetAwaiter().GetResult();
 
@@ -84,7 +84,7 @@
                         SubscriptionId = subscription.Id,
                         NewValue = SubscriptionStatusEnumExtension.Subscribed.ToString(),
                         OldValue = oldstatus,
-                        CreateBy = userdeatils.UserId,
+                        CreateBy = userDetails.UserId,
                         CreateDate = DateTime.Now,
                     };
                     this.subscriptionLogRepository.Save(auditLog);
@@ -93,7 +93,7 @@
                 }
                 catch (Exception ex)
                 {
-                    string errorDescriptin = string.Format("Exception: {0} :: Innser Exception:{1}", ex.Message, ex.InnerException);
+                    string errorDescriptin = string.Format("Exception: {0} :: inner Exception:{1}", ex.Message, ex.InnerException);
                     this.subscriptionLogRepository.LogStatusDuringProvisioning(subscriptionID, errorDescriptin, SubscriptionStatusEnumExtension.ActivationFailed.ToString());
                     this.logger?.LogInformation(errorDescriptin);
 
@@ -106,7 +106,7 @@
                         SubscriptionId = subscription.Id,
                         NewValue = SubscriptionStatusEnumExtension.ActivationFailed.ToString(),
                         OldValue = subscription.SubscriptionStatus,
-                        CreateBy = userdeatils.UserId,
+                        CreateBy = userDetails.UserId,
                         CreateDate = DateTime.Now,
                     };
                     this.subscriptionLogRepository.Save(auditLog);

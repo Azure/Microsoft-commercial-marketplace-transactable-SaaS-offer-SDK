@@ -91,7 +91,7 @@
                 }
                 catch (Exception ex)
                 {
-                    string errorDescription = string.Format("Exception: {0} :: Innser Exception:{1}", ex.Message, ex.InnerException);
+                    string errorDescription = string.Format("Exception: {0} :: inner Exception:{1}", ex.Message, ex.InnerException);
 
                     this.logger?.LogInformation(errorDescription);
 
