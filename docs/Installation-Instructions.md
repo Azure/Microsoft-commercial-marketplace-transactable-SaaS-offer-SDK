@@ -84,19 +84,19 @@ Install-Module -Name Az -AllowClobber
 
 > **Example** 
 ```powershell
-.\Deploy.ps1 
-            -WebAppNamePrefix "contoso" 
-            -TenantID "tenandId" 
-            -ADApplicationID "clientId" 
-            -ADApplicationSecret "secret" 
-            -SQLServerName "contososqlsrv" 
-            -SQLAdminLogin "adminlogin" 
-            -SQLAdminLoginPassword "password" 
-            -PublisherAdminUsers "user@contoso.com"              
-            -BacpacUrl "https://raw.githubusercontent.com/Azure/Microsoft-commercial-marketplace-transactable-SaaS-offer-SDK/master/deployment/Database/AMPSaaSDB.bacpac" 
-            -AzureSubscriptionID "subscriptionId" 
-            -ResourceGroupForDeployment "resourcegroup" 
-            -Location "East US" 
+.\Deploy.ps1 `
+            -WebAppNamePrefix "contoso" `
+            -TenantID "tenandId" `
+            -ADApplicationID "clientId" `
+            -ADApplicationSecret "secret" `
+            -SQLServerName "contososqlsrv" `
+            -SQLAdminLogin "adminlogin" `
+            -SQLAdminLoginPassword (ConvertTo-SecureString -String "password" -AsPlainText -Force) `
+            -PublisherAdminUsers "user@contoso.com" `
+            -BacpacUrl "https://raw.githubusercontent.com/Azure/Microsoft-commercial-marketplace-transactable-SaaS-offer-SDK/master/deployment/Database/AMPSaaSDB.bacpac" `
+            -AzureSubscriptionID "subscriptionId" `
+            -ResourceGroupForDeployment "resourcegroup" `
+            -Location "East US" `
             -PathToARMTemplate ".\deploy.json"
 ```
 ## Clone the repository, create an Azure SQL Database single database and prepare
