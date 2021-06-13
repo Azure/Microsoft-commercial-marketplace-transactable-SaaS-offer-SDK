@@ -49,7 +49,7 @@ Application configuration is initialized with the following keys that the publis
 | ApplicationName | Name of the application |
 | IsEmailEnabledForSubscriptionActivation | Flag that defines if an email has to be sent out when a subscription is activated (Default: False, Allowed values : True / False)|
 | IsEmailEnabledForUnsubscription | Flag that defines if an email has to be sent out when a subscription is deleted (Default: False, Allowed values : True / False)|
-| IsAutomaticProvisioningSupported | Flag that enables activation workflow. If the value is True, the options - Change Plan & Unsubscribe are not available to the customer. Clicking **Activate** button on the landing page would place the subscription in PendingActivation status and doesn't activate the subscription yet. Publisher has the option to activate the subscription, change plan and unsubscribe. If the value is False, customer can activate, change plan and unsubscribe with any intervention required from the publisher.
+| IsAutomaticProvisioningSupported | Flag that enables activation workflow. If the value is False, the options - Change Plan & Unsubscribe are not available to the customer. Clicking **Activate** button on the landing page would place the subscription in PendingActivation status and doesn't activate the subscription yet. Publisher has the option to activate the subscription, change plan and unsubscribe. If the value is True, customer can activate, change plan and unsubscribe without any intervention required from the publisher.
 | IsEmailEnabledForPendingActivation | Flag to indicate if an email should be sent out to publisher when activation workflow is enabled.
 | SMTPFromEmail | From email address for the emails |
 | SMTPHost | SMTP server name |
