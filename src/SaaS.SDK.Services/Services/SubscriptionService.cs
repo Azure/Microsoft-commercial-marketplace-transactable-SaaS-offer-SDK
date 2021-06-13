@@ -230,7 +230,7 @@
         /// Adds the plan details for subscription.
         /// </summary>
         /// <param name="allPlanDetail">All plan detail.</param>
-        public void AddPlanDetailsForSubscription(List<PlanDetailResultExtension> allPlanDetail)
+        public void AddPlanDetailsForSubscription(List<PlanDetailResultExtension> allPlanDetail, bool isPerUserPlan)
         {
             foreach (var planDetail in allPlanDetail)
             {
@@ -241,6 +241,7 @@
                     Description = planDetail.DisplayName,
                     OfferId = planDetail.OfferId,
                     PlanGuid = planDetail.PlanGUID,
+                    IsPerUser = isPerUserPlan
                 });
             }
         }

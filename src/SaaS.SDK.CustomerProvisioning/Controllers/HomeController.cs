@@ -221,7 +221,7 @@
                                 x.OfferId = newOfferId;
                                 x.PlanGUID = Guid.NewGuid();
                             });
-                            this.subscriptionService.AddPlanDetailsForSubscription(planList);
+                            this.subscriptionService.AddPlanDetailsForSubscription(planList, newSubscription.Quantity > 0);
                             var currentPlan = this.planRepository.GetById(newSubscription.PlanId);
                             var subscriptionData = this.apiClient.GetSubscriptionByIdAsync(newSubscription.SubscriptionId).ConfigureAwait(false).GetAwaiter().GetResult();
                             var subscribeId = this.subscriptionService.AddOrUpdatePartnerSubscriptions(subscriptionData);
