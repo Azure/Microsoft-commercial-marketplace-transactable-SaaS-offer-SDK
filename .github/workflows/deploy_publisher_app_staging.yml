@@ -1,0 +1,51 @@
+# This workflow will build and push a .NET Core application to an Azure Web App on every push to the master branch.
+#
+# To configure this workflow:
+# 1. Set up secrets
+#     AZURE_PUBLISHER_WEBAPP_NAME - set to the name of the Azure Publisher Web APP
+#     AZURE_PUBLISHER_WEBAPP_PUBLISH_PROFILE - upload contents of Azure Publisher App publish profile.
+#
+
+name: "Deploy publisher app to staging"
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  PROJECT: './src/SaaS.SDK.PublisherSolution/SaaS.SDK.PublisherSolution.csproj'
+  AZURE_WEBAPP_PACKAGE_PATH: './src/SaaS.SDK.PublisherSolution/publish'
+  DOTNET_CORE_VERSION: '3.1.100'                                                     
+  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_PUBLISHER_WEBAPP_NAME }}                       
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_PUBLISHER_WEBAPP_PUBLISH_PROFILE }}  
+  
+jobs:
+  build:
+    name: Deploy publisher app to staging
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Checkout the repo
+    - uses: actions/checkout@master
+
+    # Setup .NET Core SDK
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }} 
+
+    # Run dotnet build and publish
+    - name: Build app
+      run: |
+        dotnet build ${{ env.PROJECT }} --configuration Release
+        dotnet publish ${{ env.PROJECT }} --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+    # Deploy to Azure Web app
+    - name: Deploy to Azure WebApp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ env.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
